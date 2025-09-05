@@ -169,11 +169,7 @@ func main() {
 			s.Errorf("Something went wrong")
 			log.Fatalf("[!][main][ImageToBase64] Error loading logo: %v", err)
 		}
-		data.Labels.Html.Icon64, err = utils.ResizeAndBase64(*favicon, 8, 8)
-		if err != nil {
-			s.Errorf("Something went wrong")
-			log.Fatalf("[!][main][ResizeAndBase64] Error resizing logo: %v", err)
-		}
+
 	}
 	if *clientLogo == "" {
 		data.Labels.Html.IsClientLogo = "hidden"
