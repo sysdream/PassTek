@@ -1,0 +1,10 @@
+test_data/
+libs/
+output/report.html
+output/report.txt
+output/report.xlsx
+output/report.pdf
+output/screenshots/*.png
+test_data/
+.cursorrules
+PassTek

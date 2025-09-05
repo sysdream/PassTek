@@ -1,0 +1,106 @@
+{
+  "html": {
+    "global_title": "Rapport d'analyse de mots de passe",
+    "summary": {
+      "title": "Résumé",
+      "text": "Un audit de la politique de mot de passe en place a été mené. À cette fin, des attaques par recherche exhaustive ont été conduites sur les condensats recueillis afin de fournir des statistiques précises. L'analyse des résultats a mis en évidence plusieurs lacunes par rapport à l'état de l'art.<br><br>Suite à cet audit, le risque lié à la politique de mot de passe en place a été évalué à <b>{{.Stats.Risk}}</b>.<br><br><ul style='margin-top:8px; margin-bottom:8px;'>{{ if .Stats.Hashes.IsHash }}<li>Au total, <b>{{.Stats.CrackedCount}}</b> des <b>{{.Stats.Hashes.TotalNTLMHashes}}</b> condensats utilisateurs ont été cassés au cours de la prestation.</li>{{ end }}{{ if and .Stats.Hashes.IsHash (gt .Stats.Hashes.IsLM 0) }}<li>L'utilisation de l'algorithme <b>LAN MANAGER</b> a été constatée sur <b>{{ .Stats.Hashes.IsLM }}{{ if lt .Stats.Hashes.IsLM 2 }}</b> condensat{{else}}</b> condensats{{end}} de mot de passe, ce dernier est obsolète et vulnérable.</li>{{ end }}<li>Il a également été constaté que la réutilisation des mots de passe concernait <b>{{ percent .Stats.Hashes.ReusedNTLMHashes .Stats.Hashes.TotalNTLMHashes }}% </b> des comptes.</li><li>De plus, <b>{{ formatPercent (sumLengthRange .Stats.Complexity 0 3) .Stats.CrackedCount }}%</b> des mots de passe cassés ne respectent pas le niveau de complexité requis et <b>{{ formatPercent (sumLengthRange .Stats.Lengths 0 10) .Stats.CrackedCount }}%</b> la longueur recommandée.</li>{{ if gt (len .Stats.Hashes.UserEqualHash) 0 }}<li>Enfin,  <b>{{ len .Stats.Hashes.UserEqualHash }}</b>{{ if lt (len .Stats.Hashes.UserEqualHash) 2 }} compte utilise {{else}} comptes utilisent{{end}} un mot de passe égal au nom d'utilisateur, ce qui représente un risque de compromission immédiate.</li>{{ end }}</ul><br>Il est fortement recommandé de mettre en œuvre les <a href='#remediation'>remédiations</a> décrites dans ce rapport afin d'implémenter une politique de mot de passe robuste conforme à l'état de l'art, et de veiller à son application par des moyens techniques à tous les niveaux."
+    },
+    "length": {
+      "title": "Longueurs de mots de passe",
+      "text": "Le graphique ci-dessous présente la répartition des mots de passe utilisateurs selon leur longueur. L'analyse de ces résultats montre que <b>{{ sumLengthRange .Stats.Lengths 0 10 }}</b> des mots de passe cassés soit <b>{{ formatPercent (sumLengthRange .Stats.Lengths 0 10) .Stats.CrackedCount }}%</b> font <b>10 caractères ou moins</b>.</br>Les mots de passe courts sont beaucoup plus vulnérables aux attaques par force brute et au devinement, car ils permettent aux attaquants de tester rapidement toutes les combinaisons possibles.<br><br>Les principaux standards de sécurité recommandent d'utiliser des mots de passe d'au moins 12 caractères, en combinant lettres majuscules et minuscules, chiffres et symboles spéciaux lorsque cela est possible."
+    },
+    "complexity": {
+      "title": "Complexité des mots de passe",
+      "text": "Le niveau de complexité des mots de passe peut être évalué par le nombre de catégories utilisées :<ul style='margin-top:8px; margin-bottom:8px;'><li>Lettres minuscules;</li><li>Lettres majuscules;</li><li>Chiffres;</li><li>Caractères spéciaux.</li></ul>Le graphique ci-dessous présente la complexité des mots de passe utilisateurs. L'analyse montre que <b>{{ sumLengthRange .Stats.Complexity 0 3 }}</b> des mots de passe soit <b>{{ formatPercent (sumLengthRange .Stats.Complexity 0 3) .Stats.CrackedCount }}%</b> n'utilisent que <b>3 catégories de caractères ou moins</b>.<br><br>Les mots de passe combinant des lettres majuscules et minuscules, des chiffres et des caractères spéciaux sont bien plus résistants aux attaques par recherche exhaustive. Les recommandations de sécurité préconisent l'utilisation de mots de passe contenant quatre catégories de caractères différentes pour renforcer la sécurité globale et réduire le risque de compromission."
+    },
+    "occurrences": {
+      "title": "Mots-clés les plus utilisés",
+      "text": "Le graphique ci-dessous recense les mots-clés les plus fréquents dans le jeu de données analysé. {{ $top := sortMapByValueDesc .Stats.TokenCount }}Les mots <b>{{ escapeHTML (index $top 0).Key }}</b> et <b>{{ escapeHTML (index $top 1).Key }}</b> apparaissent respectivement dans <b>{{ formatPercent (index $top 0).Value .Stats.CrackedCount }}%</b> et <b>{{ formatPercent (index $top 1).Value .Stats.CrackedCount }}% des mots cassés</b>.</br><br>Ces mots de passe sont généralement faibles et largement répandus, ce qui en fait des cibles privilégiées pour les attaquants. L'analyse montre qu'une part importante des comptes compromis utilisaient des mots de passe fréquemment choisis par les utilisateurs."
+    },
+    "patterns": {
+      "title": "Motifs les plus utilisés",
+      "text": "<p>Le motif d’un mot de passe peut être analysé en observant la succession des types de caractères qu’il contient :</p><ul><li><b>l&nbsp;</b> : lettre minuscule</li><li><b>u</b> : lettre majuscule</li><li><b>d</b> : chiffre</li><li><b>s</b> : caractère spécial</li></ul><p>Voici quelques exemples de motifs souvent observés:</p><ul><li><code><b>ullllllldd</b></code> : par exemple <i>Password21</i>, qui commence par une majuscule et termine par deux chiffres.</li><li><code><b>ulllldddds</b></code> : par exemple <i>Summer2018!</i>, Commençant par une majuscule et se terminant par quatre chiffres et un caractère spécial.</li></ul><p>Cette analyse permet de mieux comprendre les habitudes de création de mots de passe et de cibler les combinaisons les plus prévisibles.</p>"
+    },
+    "mostreuse": {
+      "title": "Mots de passe les plus réutilisé",
+      "text": "Le graphique ci-dessous présente les mots de passe les plus réutilisés parmi ceux cassés. {{ $top := sortMapByValueDesc .Stats.Mostreuse }}Les mots de passe <b>{{ escapeHTML (index $top 0).Key }}</b> et <b>{{ escapeHTML (index $top 1).Key }}</b> sont réutilisés respectivement dans <b>{{ formatPercent (index $top 0).Value .Stats.CrackedCount }}%</b> et <b>{{ formatPercent (index $top 1).Value .Stats.CrackedCount }}%</b> des mots cassés</b>."
+    },
+    "reuse": {
+      "title": "Réutilisation des mots de passe",
+      "text": "Le graphique ci-dessous met en évidence l'ampleur de la réutilisation des mots de passe parmi les comptes utilisateurs du jeu de données analysé (<b>{{ if .Stats.Hashes.IsHash }}la totalité des condensats de mot de passe{{ else }}la totalité des mots de passe cassés{{ end }}</b>).<br><br>Les présents résultats montrent un taux de réutilisation de <b>{{ percent .Stats.Hashes.ReusedNTLMHashes .Stats.Hashes.TotalNTLMHashes }}%</b> soit <b>{{.Stats.Hashes.ReusedNTLMHashes}} comptes</b>. La réutilisation de mot de passe accroît considérablement la surface d'attaque. En cas de compromission d'un compte, tous les autres comptes utilisant ce même mot de passe deviennent vulnérables."
+    },
+    "remediation": {
+      "title": "Remédiations",
+      "text": "Afin de mettre en œuvre une politique de mots de passe forte, il est recommandé d'appliquer les remédiations suivantes :<ul><li>Utiliser des mots de passe uniques et complexes pour chaque compte ou service.</li><li>Interdire l'utilisation de mots de passe courants ou en lien avec l'entreprise.</li><li>Encourager l'utilisation de gestionnaires de mots de passe afin de générer et stocker des mots de passe forts.</li><li>Utiliser des mots de passe d'au moins 12 caractères</li><li>Combiner lettres majuscules, minuscules, chiffres et symboles spéciaux.</li><li>Mettre en place une authentification multifacteur (MFA) pour les accès sensibles.</li><li>Désactiver le stockage des condensats avec l'algorithme LAN Manager (LM).</li></ul><b>Références</b><ul><li>[FR] ANSSI - Recommandations relatives à l'authentification multifacteur et aux mots de passe&nbsp;: <a href='https://www.ssi.gouv.fr/administration/guide/recommandations-relatives-a-lauthentification-multifacteur-et-aux-mots-de-passe/'>https://www.ssi.gouv.fr/administration/guide/recommandations-relatives-a-lauthentification-multifacteur-et-aux-mots-de-passe/</a></li><li>[FR] ANSSI - Recommandations sur la sécurité relative à Active Directory&nbsp;: <a href='https://www.ssi.gouv.fr/uploads/IMG/pdf/NP_ActiveDirectory_NoteTech.pdf'>https://www.ssi.gouv.fr/uploads/IMG/pdf/NP_ActiveDirectory_NoteTech.pdf</a></li><li>[EN] OWASP - Recommandations de sécurité relatives aux mots de passe&nbsp;: <a href='https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls'>https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls</a></li><li>[EN] Microsoft - Network security: Do not store LAN Manager hash value on next password change&nbsp;: <a href='https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password'>https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password</a></li></ul>"
+    }
+  },
+  "Length": {
+    "A1": "Longueur",
+    "B1": "Valeur",
+    "title": "Longueur du mot de passe",
+    "short": "7 caractères ou moins",
+    "exact8": "8 caractères",
+    "exact9": "9 caractères",
+    "exact10": "10 caractères",
+    "long": "Plus de 10 caractères"
+  },
+  "Complexity": {
+    "A1": "Complexité",
+    "B1": "Valeur",
+    "title": "Complexité du mot de passe",
+    "one": "Une seule catégorie utilisée",
+    "two": "Deux catégories utilisées",
+    "three": "Trois catégories utilisées",
+    "four": "Quatre catégories utilisées"
+  },
+  "Occurrences": {
+    "title": "Mots-clés les plus utilisés",
+    "A1": "Mots clés",
+    "B1": "Valeur"
+  },
+  "Pattern": {
+    "title": "Motifs les plus utilisés",
+    "A1": "Motif",
+    "B1": "Valeur",
+    "l": "Minuscules",
+    "u": "Majuscules",
+    "s": "Spécial",
+    "d": "Chiffre"
+  },
+  "Mostreuse": {
+    "title": "Mots de passe les plus réutilisés",
+    "short": "Top5Réutilisation",
+    "A1": "Mot de passe",
+    "B1": "Valeur"
+  },
+  "Reuse": {
+    "title": "Réutilisation des mots de passe",
+    "total": "Total",
+    "short": "Réutilisation",
+    "A1": "Mot de passe",
+    "unique": "Unique",
+    "B1": "Valeur"
+  },
+  "TotalCracked": {
+    "title": "Nombre total de mots de passe cassés"
+  },
+  "Total": {
+    "title": "Nombre total de mots de passe / condensats"
+  },
+  "Hash": {
+    "title": "Analyse des condensats",
+    "TotalNTLM": "Total",
+    "Cracked": "Cassé",
+    "UniqueNTLM": "Unique",
+    "Reused": "Réutilisation",
+    "LM": "Lan Manger",
+    "EmptyNTLM": "Vide",
+    "UserEqualHash": "Utilisateur = mot de passe"
+  },
+  "Risk": {
+    "low": "Faible",
+    "medium": "Modéré",
+    "high": "Elevé",
+    "critical": "Critique"
+  }
+}

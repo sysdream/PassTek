@@ -1,0 +1,106 @@
+{
+  "html": {
+    "global_title": "Password Analysis Report",
+    "summary": {
+      "title": "Summary",
+      "text": "A password-policy audit was performed. Exhaustive search attacks were launched against the collected hashes to provide accurate statistics.<br>The results highlight several inadequacies regarding current best practices.<br><br>Following this audit, the risk associated with the existing password policy is assessed as <b>{{.Stats.Risk}}</b>.<br><br><ul style='margin-top:8px; margin-bottom:8px;'>{{ if .Stats.Hashes.IsHash }}<li>In total, <b>{{.Stats.CrackedCount}}</b> of <b>{{.Stats.Hashes.TotalNTLMHashes}}</b> user hashes were cracked during the engagement.</li>{{ end }}{{ if and .Stats.Hashes.IsHash (gt .Stats.Hashes.IsLM 0) }}<li>Use of the <b>LAN MANAGER</b> algorithm was detected on <b>{{ .Stats.Hashes.IsLM }}{{ if lt .Stats.Hashes.IsLM 2 }}</b> hash{{else}}</b> hashes{{end}}, which is obsolete and vulnerable.</li>{{ end }}<li>We also found that password reuse affects <b>{{ percent .Stats.Hashes.ReusedNTLMHashes .Stats.Hashes.TotalNTLMHashes }}%</b> of accounts.</li><li>Moreover, <b>{{ formatPercent (sumLengthRange .Stats.Complexity 0 3) .Stats.CrackedCount }}%</b> of cracked passwords do not meet the required complexity level and <b>{{ formatPercent (sumLengthRange .Stats.Lengths 0 10) .Stats.CrackedCount }}%</b> the recommended length.</li>{{ if gt (len .Stats.Hashes.UserEqualHash) 0 }}<li>Finally, <b>{{ len .Stats.Hashes.UserEqualHash }}</b> account{{ if lt (len .Stats.Hashes.UserEqualHash) 2 }} uses {{else}}s use{{end}} a password identical to the username, which represents an immediate compromise risk.</li>{{ end }}</ul><br>Implementing the <a href='#remediation'>remediation measures</a> described in this report is strongly recommended to enforce a robust, state-of-the-art password policy at every level."
+    },
+    "length": {
+      "title": "Password Lengths",
+      "text": "The chart below shows the distribution of user passwords by length. Analysis indicates that <b>{{ sumLengthRange .Stats.Lengths 0 10 }}</b> cracked passwords, i.e. <b>{{ formatPercent (sumLengthRange .Stats.Lengths 0 10) .Stats.CrackedCount }}%</b>, are <b>10 characters or fewer</b>.</br>Short passwords are far more vulnerable to brute-force and guessing attacks because attackers can test all combinations quickly.<br><br>Major security standards recommend passwords of at least 12 characters, combining uppercase and lowercase letters, digits and special symbols whenever possible."
+    },
+    "complexity": {
+      "title": "Password Complexity",
+      "text": "Password complexity can be assessed by counting the character categories used:<ul style='margin-top:8px; margin-bottom:8px;'><li>Lower-case letters;</li><li>Upper-case letters;</li><li>Digits;</li><li>Special characters.</li></ul>The chart below shows password complexity. Analysis reveals that <b>{{ sumLengthRange .Stats.Complexity 0 3 }}</b> passwords, i.e. <b>{{ formatPercent (sumLengthRange .Stats.Complexity 0 3) .Stats.CrackedCount }}%</b>, use only <b>three or fewer categories</b>.<br><br>Passwords combining all four categories are much more resistant to exhaustive-search attacks. Security guidance recommends using all four to reduce compromise risk."
+    },
+    "occurrences": {
+      "title": "Most Common Keywords",
+      "text": "The chart below lists the most frequent keywords in the dataset. {{ $top := sortMapByValueDesc .Stats.TokenCount }}The words <b>{{ escapeHTML (index $top 0).Key }}</b> and <b>{{ escapeHTML (index $top 1).Key }}</b> appear in <b>{{ formatPercent (index $top 0).Value .Stats.CrackedCount }}%</b> and <b>{{ formatPercent (index $top 1).Value .Stats.CrackedCount }}%</b> of cracked passwords</b>, respectively.</br><br>These passwords are generally weak and widespread, making them prime targets for attackers. A significant portion of compromised accounts used commonly chosen passwords."
+    },
+    "patterns": {
+      "title": "Most Common Patterns",
+      "text": "<p>The pattern of a password can be analysed by looking at the sequence of character types it contains:</p><ul><li><b>l&nbsp;</b>: lower-case letter</li><li><b>u</b>: upper-case letter</li><li><b>d</b>: digit</li><li><b>s</b>: special character</li></ul><p>Examples of frequent patterns include:</p><ul><li><code><b>ullllllldd</b></code>: e.g. <i>Password21</i>, starting with a capital letter and ending with two digits.</li><li><code><b>ulllldddds</b></code>: e.g. <i>Summer2018!</i>, starting with a capital letter and ending with four digits and a special character.</li></ul><p>This analysis helps understand password-creation habits and target the most predictable combinations.</p>"
+    },
+    "mostreuse": {
+      "title": "Most Reused Passwords",
+      "text": "The chart below shows the most reused passwords among those cracked. {{ $top := sortMapByValueDesc .Stats.Mostreuse }}Passwords <b>{{ escapeHTML (index $top 0).Key }}</b> and <b>{{ escapeHTML (index $top 1).Key }}</b> are reused in <b>{{ formatPercent (index $top 0).Value .Stats.CrackedCount }}%</b> and <b>{{ formatPercent (index $top 1).Value .Stats.CrackedCount }}%</b> of cracked passwords</b>, respectively."
+    },
+    "reuse": {
+      "title": "Password Reuse",
+      "text": "The chart below highlights password reuse among user accounts in the dataset (<b>{{ if .Stats.Hashes.IsHash }}all password hashes{{ else }}all cracked passwords{{ end }}</b>).<br><br>The results show a reuse rate of <b>{{ percent .Stats.Hashes.ReusedNTLMHashes .Stats.Hashes.TotalNTLMHashes }}%</b>, i.e. <b>{{.Stats.Hashes.ReusedNTLMHashes}} accounts</b>. Reuse greatly increases the attack surface: if one account is compromised, all others sharing the same password become vulnerable."
+    },
+    "remediation": {
+      "title": "Remediation",
+      "text": "To implement a strong password policy, apply the following measures:<ul><li>Use unique, complex passwords for each account or service.</li><li>Ban common or company-related passwords.</li><li>Encourage password-manager use to generate and store strong passwords.</li><li>Use passwords of at least 12 characters.</li><li>Combine uppercase, lowercase, digits and special symbols.</li><li>Implement multi-factor authentication (MFA) for sensitive access.</li><li>Disable storage of hashes using the LAN Manager (LM) algorithm.</li></ul><b>References</b><ul><li>[FR] ANSSI – Multi-factor auth & password recommendations: <a href='https://www.ssi.gouv.fr/administration/guide/recommandations-relatives-a-lauthentification-multifacteur-et-aux-mots-de-passe/'>https://www.ssi.gouv.fr/administration/guide/recommandations-relatives-a-lauthentification-multifacteur-et-aux-mots-de-passe/</a></li><li>[FR] ANSSI – Active Directory security recommendations: <a href='https://www.ssi.gouv.fr/uploads/IMG/pdf/NP_ActiveDirectory_NoteTech.pdf'>https://www.ssi.gouv.fr/uploads/IMG/pdf/NP_ActiveDirectory_NoteTech.pdf</a></li><li>[EN] OWASP – Authentication Cheat Sheet: <a href='https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls'>https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls</a></li><li>[EN] Microsoft – Prevent storing LM hash: <a href='https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password'>https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password</a></li></ul>"
+    }
+  },
+  "Length": {
+    "A1": "Length",
+    "B1": "Value",
+    "title": "Password Length",
+    "short": "7 characters or fewer",
+    "exact8": "8 characters",
+    "exact9": "9 characters",
+    "exact10": "10 characters",
+    "long": "More than 10 characters"
+  },
+  "Complexity": {
+    "A1": "Complexity",
+    "B1": "Value",
+    "title": "Password Complexity",
+    "one": "One category used",
+    "two": "Two categories used",
+    "three": "Three categories used",
+    "four": "Four categories used"
+  },
+  "Occurrences": {
+    "title": "Most Common Keywords",
+    "A1": "Keywords",
+    "B1": "Value"
+  },
+  "Pattern": {
+    "title": "Most Common Patterns",
+    "A1": "Pattern",
+    "B1": "Value",
+    "l": "Lowercase",
+    "u": "Uppercase",
+    "s": "Special",
+    "d": "Digit"
+  },
+  "Mostreuse": {
+    "title": "Most Reused Passwords",
+    "short": "Top5Reuse",
+    "A1": "Password",
+    "B1": "Value"
+  },
+  "Reuse": {
+    "title": "Password Reuse",
+    "total": "Total",
+    "short": "Reuse",
+    "A1": "Password",
+    "unique": "Unique",
+    "B1": "Value"
+  },
+  "TotalCracked": {
+    "title": "Total cracked passwords"
+  },
+  "Total": {
+    "title": "Total passwords / hashes"
+  },
+  "Hash": {
+    "title": "Hash analysis",
+    "TotalNTLM": "Total",
+    "Cracked": "Cracked",
+    "UniqueNTLM": "Unique",
+    "Reused": "Reuse",
+    "LM": "Lan Manager",
+    "EmptyNTLM": "Empty",
+    "UserEqualHash": "User as password"
+  },
+  "Risk": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  }
+}
