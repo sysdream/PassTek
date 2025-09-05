@@ -91,6 +91,9 @@ func ToText(stats utils.Stats, outputDir string, top int, labels utils.Labels) e
 	fmt.Fprintf(f, "\n=== "+labels.Occurrences.Title+" ===\n")
 	sortedWords := utils.SortMapByValueDesc(stats.TokenCount)
 	maxLenWords := utils.GetMaxLength(stats.TokenCount)
+	if len(sortedWords) < top {
+		top = len(sortedWords)
+	}
 	for _, s := range sortedWords[:top] {
 		fmt.Fprintf(f, "%-*s : %d\n", maxLenWords, s.Key, s.Value)
 	}
@@ -101,6 +104,9 @@ func ToText(stats utils.Stats, outputDir string, top int, labels utils.Labels) e
 	maxLenPattern := utils.GetMaxLength(stats.Patterns)
 
 	// %-*s aligns the password to the left with dynamic width
+	if len(sortedPattern) < top {
+		top = len(sortedPattern)
+	}
 	for _, s := range sortedPattern[:top] {
 		fmt.Fprintf(f, "%-*s : %d\n", maxLenPattern, s.Key, s.Value)
 	}
@@ -111,6 +117,9 @@ func ToText(stats utils.Stats, outputDir string, top int, labels utils.Labels) e
 	maxLen := utils.GetMaxLength(stats.Mostreuse)
 
 	// %-*s aligns the password to the left with dynamic width
+	if len(sortedReuse) < top {
+		top = len(sortedReuse)
+	}
 	for _, s := range sortedReuse[:top] {
 		fmt.Fprintf(f, "%-*s : %d\n", maxLen, s.Key, s.Value)
 	}
