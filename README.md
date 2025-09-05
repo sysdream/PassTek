@@ -69,19 +69,20 @@ Command example:
   -l string
         Output language (en,fr) (default "fr")
   -min int
-        Minimum number of characters to be considered as an occurrence (default: 5) (default 5)
+        Minimum number of characters to be considered as an occurrence (default 5)
   -o string
         Output directory (default "output")
   -p string
         Password file (one per line)
   -top int
-        Top N entries to display in charts and tables (default: 5) (default 5)
+        Top N entries to display in charts and tables (default 5)
 ```
 
 ## TODO
 
 * Refactor the codebase for better structure and maintainability
 * Embed all static and template files for better portability
+* Add visual examples for output formats 
 
 ## License
 

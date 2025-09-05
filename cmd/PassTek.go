@@ -28,9 +28,8 @@ func main() {
 	logo := flag.String("L", "img/logo_sysdream.png", "Company logo file (png)")
 	clientLogo := flag.String("cL", "", "Client logo file (png)")
 	maskPasswords := flag.Bool("anon", false, "Anonymize passwords (show first 2 and last 2 characters)")
-	favicon := flag.String("fav", "img/logo_passtek.png", "Favicon file (png)")
-	minCharOccurences := flag.Int("min", 5, "Minimum number of characters to be considered as an occurrence (default: 5)")
-	top := flag.Int("top", 5, "Top N entries to display in charts and tables (default: 5)")
+	minCharOccurences := flag.Int("min", 5, "Minimum number of characters to be considered as an occurrence")
+	top := flag.Int("top", 5, "Top N entries to display in charts and tables")
 	flag.Parse()
 
 	fmt.Println(`
