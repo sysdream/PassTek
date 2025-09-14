@@ -1,0 +1,43 @@
+
+=== Analyse des condensats ===
+Total                      : 1000
+Cassé                      : 580
+Unique                     : 698
+Réutilisation              : 302
+Lan Manger                 : 230
+Vide                       : 30
+Utilisateur = mot de passe : 5
+
+=== Longueur du mot de passe ===
+7 caractères ou moins  : 408
+8 caractères           : 99
+9 caractères           : 45
+10 caractères          : 20
+Plus de 10 caractères  : 8
+
+=== Complexité du mot de passe ===
+Une seule catégorie utilisée   : 44
+Deux catégories utilisées      : 177
+Trois catégories utilisées     : 268
+Quatre catégories utilisées    : 91
+
+=== Mots-clés les plus utilisés ===
+cyber      : 27
+spring     : 24
+purpl      : 22
+omega      : 21
+pixel      : 21
+
+=== Motifs les plus utilisés === (l = Minuscules, u = Majuscules, d = Chiffre, s = Spécial)
+ulllll        : 34
+llllll        : 28
+llllld        : 24
+ullllld       : 21
+ullllll       : 16
+
+=== Mots de passe les plus réutilisés ===
+Delta@661     : 8
+Purpl35       : 8
+@ur0r@#1      : 8
+cipher        : 8
+71g3r#        : 7

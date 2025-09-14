@@ -24,18 +24,76 @@
 ## Input Format
 
 * Password file: one password per line
-* Hash file: `username:rid:lmhash:nthash:::`
+* Hash file: `username:rid:lmhash:nthash`
 
 
 ## Output Options
 
 The program can output the results in different formats, including:
 
-- Plain text (`.txt`): raw statistics and summaries
-- Excel spreadsheet (`.xlsx`): organized sheets with stats and charts
 - HTML report (`.html`): interactive visual charts (via ECharts)
+<p align="center">
+  <img src="img/html_output.gif" alt="HTML output example" width="600"/>
+</p>
+
+- Excel spreadsheet (`.xlsx`): organized sheets with stats and charts
+<p align="center">
+  <img src="img/excel_output.png" alt="Excel output example" width="600"/>
+</p>
+
 - Screenshot (`.png`): screenshot of all pie charts
+<p align="center">
+  <img src="img/screenshot_output.png" alt="Screenshot output example" width="600"/>
+</p>
 - PDF (`.pdf`): pdf version of the html report
+<p align="center">
+  <img src="img/pdf_output.png" alt="PDF output example" height="400"/>
+</p>
+
+- Plain text (`.txt`): raw statistics and summaries
+
+      === Hash analysis ===
+      Total            : 1000
+      Cracked          : 580
+      Unique           : 698
+      Reuse            : 302
+      Lan Manager      : 230
+      Empty            : 30
+      User as password : 5
+
+      === Password Length ===
+      7 characters or fewer   : 408
+      8 characters            : 99
+      9 characters            : 45
+      10 characters           : 20
+      More than 10 characters : 8
+
+      === Password Complexity ===
+      One category used     : 44
+      Two categories used   : 177
+      Three categories used : 268
+      Four categories used  : 91
+
+      === Most Common Keywords ===
+      cyber      : 27
+      spring     : 24
+      purpl      : 22
+      omega      : 21
+      pixel      : 21
+
+      === Most Common Patterns === (l = Lowercase, u = Uppercase, d = Digit, s = Special)
+      ulllll        : 34
+      llllll        : 28
+      llllld        : 24
+      ullllld       : 21
+      ullllll       : 16
+
+      === Most Reused Passwords ===
+      cipher        : 8
+      @ur0r@#1      : 8
+      Purpl35       : 8
+      Delta@661     : 8
+      0r10n6        : 7
 
 ## How to Use
 
@@ -82,7 +140,7 @@ Command example:
 
 * Refactor the codebase for better structure and maintainability
 * Embed all static and template files for better portability
-* Add visual examples for output formats 
+* Rethink templating on language files (json) to make text editing easier for HTML and PDF reports.
 
 ## License
 
